@@ -21,10 +21,14 @@ class Comment(db.Model):
 
     __tablename__ = "comments"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id      = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(4096))
 
+class Message(db.Model):
+    __tablename__ = "messages"
 
+    id      = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(4096))
 
 @app.route('/', methods=["GET", "POST"])
 def index():
@@ -37,14 +41,13 @@ def index():
     db.session.commit()
     return redirect(url_for('index'))
 
-
-@app.route('/last-message/')
-def last_message():
-    #message = open(MESSAGE_FILE, "r").read()
-    #return message
-    pass
-@app.route('/message/<message>')
-def message(message):
-    #open(MESSAGE_FILE, "w").write(message)
-    #return 'Your message was %s' % message
-    pass
+@app.route('/interface', methods=["GET", "POST"])
+def interface():
+    if request.method == "GET":
+        return render_template("main_page.html", comments=Message.query.all())
+    #POST
+    # grab the contents of the form when posting
+    message = Message(content=request.form["message"])
+    db.session.add(message)
+    db.session.commit()
+    return redirect(url_for('interface'))
