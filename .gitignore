@@ -102,3 +102,6 @@ ENV/
 
 # secrete
 _my_secrets.py
+_my_secrets.pyc
+*.pyc
+
